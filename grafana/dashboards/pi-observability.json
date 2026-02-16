@@ -1,0 +1,182 @@
+{
+  "uid": "pi-observability",
+  "title": "Pi Observability",
+  "overwrite": true,
+  "folderUid": "openclaw-otel",
+  "tags": [
+    "pi",
+    "observability"
+  ],
+  "timezone": "browser",
+  "panels": [
+    {
+      "title": "Pi Turns per Minute",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(pi_turns_total[5m]) * 60",
+          "legendFormat": "Turns/min"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "datasource": "Prometheus"
+    },
+    {
+      "title": "Average Turn Duration (seconds)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(pi_turn_duration_seconds_sum[5m]) / rate(pi_turn_duration_seconds_count[5m])",
+          "legendFormat": "Avg Duration"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "datasource": "Prometheus"
+    },
+    {
+      "title": "Total Tokens per Hour",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "increase(pi_tokens_total[1h])",
+          "legendFormat": "Tokens/hour"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "datasource": "Prometheus"
+    },
+    {
+      "title": "Tools per Minute",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(pi_tools_total[5m]) * 60",
+          "legendFormat": "Tools/min"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "datasource": "Prometheus"
+    },
+    {
+      "title": "Pi Tools Error Rate (%)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "(rate(pi_tools_total{exit_code!~\"0\"}[5m]) / rate(pi_tools_total[5m])) * 100",
+          "legendFormat": "Error Rate %"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "datasource": "Prometheus"
+    },
+    {
+      "title": "Total Turns Over Time",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "increase(pi_turns_total[1h])",
+          "legendFormat": "Total Turns"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "datasource": "Prometheus"
+    },
+    {
+      "title": "Token Usage Rate (per minute)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(pi_tokens_total[5m]) * 60",
+          "legendFormat": "Tokens/min"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "datasource": "Prometheus"
+    },
+    {
+      "title": "Average Tokens per Turn",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(pi_tokens_total[5m]) / rate(pi_turns_total[5m])",
+          "legendFormat": "Tokens/Turn"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "datasource": "Prometheus"
+    },
+    {
+      "title": "Average Tool Duration by Tool (seconds)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "expr": "rate(pi_tool_duration_seconds_sum{tool_name=~\"$tool\"}[5m]) / rate(pi_tool_duration_seconds_count{tool_name=~\"$tool\"}[5m])",
+          "legendFormat": "{{tool_name}}"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "datasource": "Prometheus"
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "tool",
+        "type": "query",
+        "query": "label_values(pi_tools_total, tool_name)",
+        "multi": true,
+        "includeAll": true
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "refresh": "30s"
+}
