@@ -1,0 +1,76 @@
+╔══════════════════════════════════════════════════════════════╗
+║           OpenClaw OTEL Stack - Quick Reference              ║
+╚══════════════════════════════════════════════════════════════╝
+
+INSTALLATION
+─────────────────────────────────────────────────────────────────
+  ./setup.sh                    # Run setup
+  docker compose up -d          # Start everything
+  docker compose logs -f        # Watch startup
+
+ACCESS URLS
+─────────────────────────────────────────────────────────────────
+  Grafana:      http://your-host:3000
+  Prometheus:   http://your-host:9090
+  Tempo:        http://your-host:3200
+
+OPENCLAW CONFIGURATION
+─────────────────────────────────────────────────────────────────
+  HTTP endpoint:  http://your-host:4318
+  gRPC endpoint:  your-host:4317
+  
+  Environment:    OTEL_EXPORTER_OTLP_ENDPOINT=http://your-host:4318
+
+COMMON COMMANDS
+─────────────────────────────────────────────────────────────────
+  Start:          docker compose up -d
+  Stop:           docker compose down
+  Restart:        docker compose restart <service>
+  Logs:           docker compose logs -f <service>
+  Status:         docker compose ps
+  Stats:          docker stats
+
+SERVICES
+─────────────────────────────────────────────────────────────────
+  otel-collector  Receives OTLP data from OpenClaw
+  tempo           Stores distributed traces
+  prometheus      Stores metrics (tokens, latencies)
+  grafana         Visualization and dashboards
+
+DATA LOCATIONS
+─────────────────────────────────────────────────────────────────
+  All data:       /mnt/dev/openclaw-otel/data/
+  Grafana:        /mnt/dev/openclaw-otel/data/grafana/
+  Tempo:          /mnt/dev/openclaw-otel/data/tempo/
+  Prometheus:     /mnt/dev/openclaw-otel/data/prometheus/
+
+TROUBLESHOOTING
+─────────────────────────────────────────────────────────────────
+  No traces?      docker compose logs otel-collector | grep -i error
+  High memory?    Edit docker-compose.yaml resource limits
+  Permissions?    sudo ./setup.sh
+  Fresh start?    docker compose down -v && sudo rm -rf data/*
+
+DASHBOARD
+─────────────────────────────────────────────────────────────────
+  Location:       Grafana → Dashboards → OpenClaw OTEL
+  Auto-refresh:   10 seconds
+  Time range:     Last 1 hour (adjustable)
+  
+  Panels:         Request Rate, Latency p95, Token Usage,
+                  Error Rate, Memory Usage, Throughput
+
+RETENTION
+─────────────────────────────────────────────────────────────────
+  Traces:         7 days (tempo.yaml)
+  Metrics:        30 days (prometheus --retention flag)
+  Dashboards:     Persistent
+
+INTEGRATION
+─────────────────────────────────────────────────────────────────
+  Netdata:        Point to http://your-host:9090
+  Custom scrape:  Edit prometheus.yaml
+  More dashboards: grafana/dashboards/ (auto-loaded)
+
+═════════════════════════════════════════════════════════════════
+For full documentation, see README.md
