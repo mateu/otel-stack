@@ -16,7 +16,7 @@ scrape_configs:
           job: openclaw-gateway
           service_name: openclaw-gateway
           host: clawd
-          format: v2
+          format: v4
           __path__: /var/log/openclaw/*.log
     pipeline_stages:
       - json:
@@ -32,7 +32,7 @@ scrape_configs:
       - labels:
           level:
       - template:
-          source: formatted
-          template: '{{ .ts }} [{{ .level }}] {{ if .m2 }}{{ .m2 }}{{ else if .m1 }}{{ .m1 }}{{ else if .m0 }}{{ .m0 }}{{ else }}log{{ end }}'
+          source: msg
+          template: '{{ if .m2 }}{{ .m2 }}{{ else if .m1 }}{{ .m1 }}{{ else if .m0 }}{{ .m0 }}{{ else }}log{{ end }}'
       - output:
-          source: formatted
+          source: msg

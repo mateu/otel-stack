@@ -267,10 +267,13 @@
       },
       "targets": [
         {
-          "expr": "{job=\"openclaw-gateway\",format=\"v2\"}",
+          "expr": "{job=\"openclaw-gateway\",format=\"v4\"}",
           "refId": "A"
         }
-      ]
+      ],
+      "options": {
+        "showTime": true
+      }
     },
     {
       "type": "stat",
@@ -417,7 +420,7 @@
       },
       "targets": [
         {
-          "expr": "{job=\"openclaw-gateway\",format=\"v2\",level=~\"ERROR|FATAL\"}",
+          "expr": "{job=\"openclaw-gateway\",format=\"v4\",level=~\"ERROR|FATAL\"}",
           "refId": "A"
         }
       ],
@@ -441,7 +444,7 @@
       },
       "targets": [
         {
-          "expr": "{job=\"openclaw-gateway\",format=\"v2\"} |= \"[WARN]\"",
+          "expr": "{job=\"openclaw-gateway\",format=\"v4\",level=\"WARN\"}",
           "refId": "A"
         }
       ],
@@ -465,7 +468,7 @@
       },
       "targets": [
         {
-          "expr": "{job=\"openclaw-gateway\",format=\"v2\"} |= \"stuck session\"",
+          "expr": "{job=\"openclaw-gateway\",format=\"v4\"} |= \"stuck session\"",
           "refId": "A"
         }
       ],
@@ -494,6 +497,6 @@
   "timezone": "",
   "title": "OpenClaw E2E Observability",
   "uid": "openclaw-e2e-obsv",
-  "version": 16,
+  "version": 18,
   "weekStart": ""
 }
