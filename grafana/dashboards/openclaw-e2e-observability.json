@@ -267,7 +267,7 @@
       },
       "targets": [
         {
-          "expr": "{job=\"openclaw-gateway\"}",
+          "expr": "{job=\"openclaw-gateway\",format=\"v2\"}",
           "refId": "A"
         }
       ]
@@ -417,10 +417,14 @@
       },
       "targets": [
         {
-          "expr": "{job=\"openclaw-gateway\"} |= \"error\"",
+          "expr": "{job=\"openclaw-gateway\",format=\"v2\",level=~\"ERROR|FATAL\"}",
           "refId": "A"
         }
-      ]
+      ],
+      "timeFrom": "24h",
+      "options": {
+        "showTime": true
+      }
     },
     {
       "type": "logs",
@@ -437,10 +441,14 @@
       },
       "targets": [
         {
-          "expr": "{job=\"openclaw-gateway\"} |= \"warn\"",
+          "expr": "{job=\"openclaw-gateway\",format=\"v2\"} |= \"[WARN]\"",
           "refId": "A"
         }
-      ]
+      ],
+      "timeFrom": "24h",
+      "options": {
+        "showTime": true
+      }
     },
     {
       "type": "logs",
@@ -457,10 +465,14 @@
       },
       "targets": [
         {
-          "expr": "{job=\"openclaw-gateway\"} |= \"stuck session\"",
+          "expr": "{job=\"openclaw-gateway\",format=\"v2\"} |= \"stuck session\"",
           "refId": "A"
         }
-      ]
+      ],
+      "timeFrom": "24h",
+      "options": {
+        "showTime": true
+      }
     }
   ],
   "refresh": "10s",
@@ -482,6 +494,6 @@
   "timezone": "",
   "title": "OpenClaw E2E Observability",
   "uid": "openclaw-e2e-obsv",
-  "version": 5,
+  "version": 16,
   "weekStart": ""
 }
