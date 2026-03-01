@@ -32,7 +32,7 @@ scrape_configs:
     static_configs:
       - targets: ['grafana:3000']
 
-  # Scrape Pi metrics
-  - job_name: 'pi-metrics'
-    static_configs:
-      - targets: ['172.17.0.1:9091']
+  # Pi metrics disabled (host target currently unavailable)
+  # - job_name: 'pi-metrics'
+  #   static_configs:
+  #     - targets: ['172.17.0.1:9091']

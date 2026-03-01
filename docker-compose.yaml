@@ -20,6 +20,7 @@ services:
     depends_on:
       - tempo
       - prometheus
+      - loki
     networks:
       - otel
 
@@ -44,6 +45,25 @@ services:
     networks:
       - otel
 
+  loki:
+    image: grafana/loki:3.2.1
+    container_name: loki
+    command: ["-config.file=/etc/loki/config.yaml"]
+    volumes:
+      - ./loki-config.yaml:/etc/loki/config.yaml:ro
+      - loki-data:/loki
+    ports:
+      - "3100:3100"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+    networks:
+      - otel
+
   prometheus:
     image: prom/prometheus:v3.5.1
     container_name: prometheus
@@ -58,12 +78,26 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=30d'
       - '--web.enable-lifecycle'
+      - '--web.enable-remote-write-receiver'
     deploy:
       resources:
         limits:
           memory: 2G
         reservations:
           memory: 1G
+    networks:
+      - otel
+
+  promtail:
+    image: grafana/promtail:3.2.1
+    container_name: promtail
+    command: ["-config.file=/etc/promtail/config.yaml"]
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yaml:ro
+      - /tmp/openclaw:/var/log/openclaw:ro
+    restart: unless-stopped
+    depends_on:
+      - loki
     networks:
       - otel
 
@@ -91,9 +125,13 @@ services:
     depends_on:
       - tempo
       - prometheus
+      - loki
     networks:
       - otel
 
 networks:
   otel:
     driver: bridge
+
+volumes:
+  loki-data:

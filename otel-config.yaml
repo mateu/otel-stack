@@ -40,7 +40,11 @@ processors:
 exporters:
   # Send traces to Tempo
   otlp_grpc/tempo:
-    endpoint: tempo:4317
+    endpoint: http://tempo:4317
+    tls:
+      insecure: true
+  otlphttp/tempo:
+    endpoint: http://tempo:4318
     tls:
       insecure: true
   
@@ -49,6 +53,9 @@ exporters:
     endpoint: "0.0.0.0:9999"
     namespace: openclaw
   
+  otlp_http/loki:
+    endpoint: http://loki:3100/otlp
+
   # Debug output
   debug:
     verbosity: detailed
@@ -67,6 +74,11 @@ service:
       receivers: [otlp, spanmetrics]
       processors: [memory_limiter, batch]
       exporters: [prometheus, debug]
+
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch, resource]
+      exporters: [otlp_http/loki, debug]
   
   # OTEL Collector's own internal telemetry (v0.123.0+ syntax)
   telemetry:
